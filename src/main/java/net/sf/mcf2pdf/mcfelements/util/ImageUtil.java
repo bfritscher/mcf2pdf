@@ -129,7 +129,8 @@ public final class ImageUtil {
 			}
 			return 0;
 		} catch (ImageProcessingException e) {
-			throw new IOException(e);
+			//throw new IOException(e);
+			return 0;
 		} catch (MetadataException e) {
 			return 0;
 		}

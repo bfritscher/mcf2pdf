@@ -41,6 +41,9 @@ import net.sf.mcf2pdf.mcfelements.McfPageNum;
 import net.sf.mcf2pdf.mcfelements.McfPosition;
 import net.sf.mcf2pdf.mcfelements.McfText;
 import net.sf.mcf2pdf.mcfelements.util.DigesterUtil;
+import net.sf.mcf2pdf.mcfelements.McfCorner;
+import net.sf.mcf2pdf.mcfelements.McfCorners;
+
 
 
 /**
@@ -405,5 +408,27 @@ public class DigesterConfiguratorImpl implements DigesterConfigurator {
 		result.add(new String[] { "enabled", "enabled" });
 		return result;
 	}
+
+	protected Class<? extends McfCorners> getCornersClass() {
+		return McfCornersImpl.class;
+	}
+  
+	protected List<String[]> getSpecialCornersAttributes() {
+       		List<String[]> result = new Vector<String[]>();
+       		result.add(new String[] { "enabled", "enabled" });
+       		return result;
+       	}
+  
+       	protected Class<? extends McfCorner> getCornerClass() {
+       		return McfCornerImpl.class;
+       	}
+  
+       	protected List<String[]> getSpecialCornerAttributes() {
+       		List<String[]> result = new Vector<String[]>();
+       		result.add(new String[] { "length", "length" });
+       		result.add(new String[] { "where", "where" });
+       		result.add(new String[] { "shape", "shape" });
+       		return result;
+        }
 
 }
