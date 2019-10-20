@@ -3,10 +3,17 @@
  *******************************************************************************/
 package net.sf.mcf2pdf.mcfelements.impl;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import net.sf.mcf2pdf.mcfelements.McfCutout;
 import net.sf.mcf2pdf.mcfelements.McfImage;
+import net.sf.mcf2pdf.pagebuild.PageRenderContext;
 
 public class McfImageImpl extends AbstractMcfAreaContentImpl implements McfImage {
-	
+
+	private final static Log log = LogFactory.getLog(McfImageImpl.class);
+
 	private String parentChildRelationshipNature;
 	
 	private float scale;
@@ -27,6 +34,8 @@ public class McfImageImpl extends AbstractMcfAreaContentImpl implements McfImage
 
     private String passepartoutDesignElementId;
 
+	private McfCutout cutout;
+
 	@Override
 	public ContentType getContentType() {
 		return ContentType.IMAGE;
@@ -42,6 +51,10 @@ public class McfImageImpl extends AbstractMcfAreaContentImpl implements McfImage
 	}
 
 	public float getScale() {
+		// Version 4.x
+		if (this.cutout != null) {
+			return this.cutout.getScale();
+		}
 		return scale;
 	}
 
@@ -57,7 +70,11 @@ public class McfImageImpl extends AbstractMcfAreaContentImpl implements McfImage
 		this.useABK = useABK;
 	}
 
-	public int getLeft() {
+	public float getLeft() {
+		// Version 4.x
+		if (this.cutout != null) {
+			return this.cutout.getLeft();
+		}
 		return left;
 	}
 
@@ -65,7 +82,12 @@ public class McfImageImpl extends AbstractMcfAreaContentImpl implements McfImage
 		this.left = left;
 	}
 
-	public int getTop() {
+	public float getTop() {
+		// Version 4.x
+		if (this.cutout != null) {
+			log.debug("top from cutout: " + this.cutout.getTop());
+			return this.cutout.getTop();
+		}
 		return top;
 	}
 
@@ -90,6 +112,7 @@ public class McfImageImpl extends AbstractMcfAreaContentImpl implements McfImage
 	}
 
 	public String getFileName() {
+		log.debug("Image filename: " + fileName);
 		return fileName;
 	}
 
@@ -114,5 +137,14 @@ public class McfImageImpl extends AbstractMcfAreaContentImpl implements McfImage
 		this.fadingFile = fadingFile;
 	}
 	
+
+	public McfCutout getCutout() {
+		return cutout;
+	}
+
+	public void setCutout(McfCutout cutout) {
+		log.debug("cutout.top: " + cutout.getTop());
+		this.cutout = cutout;
+	}
 
 }

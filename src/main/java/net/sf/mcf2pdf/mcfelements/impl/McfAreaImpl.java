@@ -5,16 +5,24 @@ package net.sf.mcf2pdf.mcfelements.impl;
 
 import java.awt.Color;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import net.sf.mcf2pdf.mcfelements.McfArea;
 import net.sf.mcf2pdf.mcfelements.McfAreaContent;
 import net.sf.mcf2pdf.mcfelements.McfBorder;
 import net.sf.mcf2pdf.mcfelements.McfPage;
+import net.sf.mcf2pdf.mcfelements.McfPosition;
 
 
 public class McfAreaImpl implements McfArea {
 	
 	private McfPage page;
-	
+
+	private final static Log log = LogFactory.getLog(McfAreaImpl.class);
+
+	private McfPosition position;
+
 	private float left;
 	
 	private float top;
@@ -58,8 +66,17 @@ public class McfAreaImpl implements McfArea {
 		this.page = page;
 	}
 
+	public void setPosition(McfPosition position) {
+		log.debug("position.left: " + position.getLeft());
+		this.position = position;
+	}
+
 	@Override
 	public float getLeft() {
+		// Version 4.x
+		if (this.position != null) {
+			return this.position.getLeft();
+		}
 		return left;
 	}
 
@@ -69,6 +86,10 @@ public class McfAreaImpl implements McfArea {
 
 	@Override
 	public float getTop() {
+		// Version 4.x
+		if (this.position != null) {
+			return this.position.getTop();
+		}
 		return top;
 	}
 
@@ -78,6 +99,10 @@ public class McfAreaImpl implements McfArea {
 
 	@Override
 	public float getWidth() {
+		// Version 4.x
+		if (this.position != null) {
+			return this.position.getWidth();
+		}
 		return width;
 	}
 
@@ -87,6 +112,10 @@ public class McfAreaImpl implements McfArea {
 
 	@Override
 	public float getHeight() {
+		// Version 4.x
+		if (this.position != null) {
+			return this.position.getHeight();
+		}
 		return height;
 	}
 
@@ -96,6 +125,10 @@ public class McfAreaImpl implements McfArea {
 
 	@Override
 	public float getRotation() {
+		// Version 4.x
+		if (this.position != null) {
+			return this.position.getRotation();
+		}
 		return rotation;
 	}
 
@@ -105,6 +138,10 @@ public class McfAreaImpl implements McfArea {
 
 	@Override
 	public int getZPosition() {
+		// Version 4.x
+		if (this.position != null) {
+			return this.position.getZPosition();
+		}
 		return zPosition;
 	}
 

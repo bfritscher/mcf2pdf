@@ -60,6 +60,9 @@ public class PageImage implements PageDrawable {
 
 	@Override
 	public BufferedImage renderAsBitmap(PageRenderContext context, Point drawOffsetPixels, int widthPX, int heightPX) throws IOException {
+		context.getLog().debug("Rendering image: " //
+				+ image.getArea().getLeft() + '/' + image.getArea().getTop() + ' ' //
+				+ image.getArea().getWidth() + '/' + image.getArea().getHeight());
 		int widthPixel = context.toPixel(image.getArea().getWidth() / 10.0f);
 		int heightPixel = context.toPixel(image.getArea().getHeight() / 10.0f);
 		if (image.getFileName() == null || "".equals(image.getFileName())) {
@@ -112,6 +115,7 @@ public class PageImage implements PageDrawable {
 		// get image resolution; load base image into memory
 		float[] res = ImageUtil.getImageResolution(baseImage);
 		BufferedImage baseImg = ImageUtil.readImage(baseImage);
+		context.getLog().debug("image size: " + baseImg.getWidth() + '/' + baseImg.getHeight());
 
 		double tmmX = image.getArea().getWidth() /10.0f;
 		double tmmY = image.getArea().getHeight() / 10.0f;
@@ -120,6 +124,7 @@ public class PageImage implements PageDrawable {
 		double resY = res[1] / ImageUtil.MM_PER_INCH;
 
 		double scale = image.getScale() / ImageUtil.SQRT_2;
+		context.getLog().debug("scale: " + scale);
 
 		double sw = (tmmX * resX) / scale;
 		double sh = (tmmY * resY) / scale;
@@ -190,12 +195,104 @@ public class PageImage implements PageDrawable {
 			sh = sh * fotoArea.getHeight();
 		}
 
-		// draw main image
-		g2d.drawImage(baseImg, 
-				imgLeft, imgTop, imgLeft + effImgWidth, imgTop + effImgHeight,
-				leftOffset, topOffset, leftOffset + (int)Math.round(sw), topOffset + (int)Math.round(sh),
-				null);
-		
+		context.getLog().debug("eff image size: " //
+				+ imgLeft + '/' + imgTop + ' ' //
+				+ effImgWidth + '/' + effImgHeight + ' ' //
+				+ leftOffset + '/' + topOffset + ' ' //
+				+ sw + '/' + sh + ' ' //
+		);
+
+		g2d.drawImage(baseImg, imgLeft, imgTop, imgLeft + effImgWidth, imgTop + effImgHeight, leftOffset, topOffset,
+				leftOffset + (int) Math.round(sw), topOffset + (int) Math.round(sh), null);
+
+		// draw corners
+		if (image.getArea().getCorners() != null) {
+			McfCorners corners = image.getArea().getCorners();
+			for (McfCorner corner : corners.getCorners()) {
+				if ("top-left".equals(corner.getWhere())) {
+					int length = context.toPixel(corner.getLength()) / 5;
+
+					g2d.setColor(new Color(0, 0, 0, 255));
+					g2d.setComposite(AlphaComposite.Clear);
+					// g2d.fillRect(0, 0, length, length);
+					g2d.setStroke(new BasicStroke(length));
+					g2d.drawArc(-length / 2, -length / 2, (int) (length * 2), (int) (length * 2), 90, 90);
+
+					g2d.setPaintMode();
+					g2d.setColor(borderColor);
+					// g2d.setColor(Color.GREEN);
+					if (borderWidth > 0) {
+						g2d.setStroke(new BasicStroke(borderWidth));
+						g2d.drawArc(borderWidth / 2, borderWidth / 2, (int) (length), (int) (length), 90, 90);
+					}
+				} else if ("top-right".equals(corner.getWhere())) {
+					int length = context.toPixel(corner.getLength()) / 5;
+
+					g2d.setColor(new Color(0, 0, 0, 255));
+					g2d.setComposite(AlphaComposite.Clear);
+					// g2d.fillRect(0, 0, length, length);
+					g2d.setStroke(new BasicStroke(length));
+					g2d.drawArc((int) (widthPixel + xAdd - length * 1.5), -length / 2, (int) (length * 2),
+							(int) (length * 2), 0, 90);
+
+					g2d.setPaintMode();
+					g2d.setColor(borderColor);
+					// g2d.setColor(Color.GREEN);
+					if (borderWidth > 0) {
+						g2d.setStroke(new BasicStroke(borderWidth));
+						g2d.drawArc((int) (widthPixel + xAdd - length - borderWidth / 2), borderWidth / 2, length,
+								length, 0, 90);
+					}
+				} else if ("bottom-left".equals(corner.getWhere())) {
+					int length = context.toPixel(corner.getLength()) / 5;
+
+					g2d.setColor(new Color(0, 0, 0, 255));
+					g2d.setComposite(AlphaComposite.Clear);
+					// g2d.fillRect(0, 0, length, length);
+					g2d.setStroke(new BasicStroke(length));
+					g2d.drawArc(-length / 2, (int) (heightPixel + yAdd - length * 1.5), (int) (length * 2),
+							(int) (length * 2), 180, 90);
+
+					g2d.setPaintMode();
+					g2d.setColor(borderColor);
+					// g2d.setColor(Color.GREEN);
+					if (borderWidth > 0) {
+						g2d.setStroke(new BasicStroke(borderWidth));
+						g2d.drawArc(borderWidth / 2, (int) (heightPixel + yAdd - length - borderWidth / 2),
+								(int) (length), (int) (length), 180, 90);
+					}
+				} else if ("bottom-right".equals(corner.getWhere())) {
+					int length = context.toPixel(corner.getLength()) / 5;
+
+					g2d.setColor(new Color(0, 0, 0, 255));
+					g2d.setComposite(AlphaComposite.Clear);
+					// g2d.fillRect(0, 0, length, length);
+					g2d.setStroke(new BasicStroke(length));
+					g2d.drawArc((int) (widthPixel + xAdd - length * 1.5), (int) (heightPixel + yAdd - length * 1.5),
+							(int) (length * 2), (int) (length * 2), 270, 90);
+
+					g2d.setPaintMode();
+					g2d.setColor(borderColor);
+					// g2d.setColor(Color.GREEN);
+					if (borderWidth > 0) {
+						g2d.setStroke(new BasicStroke(borderWidth));
+						g2d.drawArc((int) (widthPixel + xAdd - length - borderWidth / 2),
+								(int) (heightPixel + yAdd - length - borderWidth / 2), (int) (length), (int) (length),
+								270, 90);
+					}
+				} else {
+					context.getLog().warn("unknown where: " + corner.getWhere());
+				}
+			}
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION,
+					RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+			g2d.setComposite(FadingComposite.INSTANCE);
+			g2d.setPaintMode();
+		} else {
+			context.getLog().debug("no corners found");
+		}
+
 		// mask image
 		if (maskFile != null) {
 			int x = 0;
