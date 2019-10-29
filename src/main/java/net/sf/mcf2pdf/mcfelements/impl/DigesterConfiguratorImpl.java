@@ -324,6 +324,7 @@ public class DigesterConfiguratorImpl implements DigesterConfigurator {
 	protected List<String[]> getSpecialBackgroundAttributes() {
 		List<String[]> result = new Vector<String[]>();
 		result.add(new String[] { "templatename", "templateName" });
+		result.add(new String[] { "designElementId", "designElementId" });
 		return result;
 	}
 

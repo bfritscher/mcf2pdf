@@ -100,13 +100,18 @@ public class PageBackground implements PageDrawable {
 	private File extractBackground(List<? extends McfBackground> bgs,
 			PageRenderContext context) throws IOException {
 		for (McfBackground bg : bgs) {
+			File f = context.getBackgroundImage(bg.getDesignElementId());
+			if ( f != null) {
+				return f;
+			}
+
 			String tn = bg.getTemplateName();
 			if (tn == null || !tn.matches("[a-zA-Z0-9_]+,normal(,.*)?"))
 				continue;
 
 			tn = tn.substring(0, tn.indexOf(","));
 
-			File f = context.getBackgroundImage(tn);
+			f = context.getBackgroundImage(tn);
 			if (f == null) {
 				f = context.getBackgroundColor(tn);
 			}

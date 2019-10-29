@@ -16,4 +16,6 @@ public interface McfBackground {
 
 	public int getLayout();
 
+	public String getDesignElementId();
+
 }

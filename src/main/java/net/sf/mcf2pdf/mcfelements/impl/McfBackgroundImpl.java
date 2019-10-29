@@ -15,6 +15,8 @@ public class McfBackgroundImpl implements McfBackground {
 	private int type;
 	
 	private int layout;
+
+	private String designElementId;
 	
 	public McfPage getPage() {
 		return page;
@@ -46,6 +48,14 @@ public class McfBackgroundImpl implements McfBackground {
 
 	public void setLayout(int layout) {
 		this.layout = layout;
+	}
+
+	public String getDesignElementId() {
+		return this.designElementId;
+	}
+
+	public void setDesignElementId(String designElementId) {
+		this.designElementId = designElementId;
 	}
 
 }
